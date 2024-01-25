@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+  gpt-server:
+    image: base/gpt:latest
+    build: ./
+    ports:
+      - 8080:8000
+    volumes:
+      - ./models:/model/models
+    restart: always
+    command:
+      - bash
+      - start.sh
+      - --repo=TheBloke/Mistral-7B-Instruct-v0.1-GGUF
+      - --file=mistral-7b-instruct-v0.1.Q2_K.gguf
+      - --n_ctx=1024

@@ -1,0 +1,27 @@
+version: '3.9'
+
+services:
+  gpt-server:
+    image: asia-southeast1-docker.pkg.dev/base-devsecops/base-public/base-gpt-server:gpu-stable
+    build: 
+      context: ./
+      dockerfile: Dockerfile.gpu
+    ports:
+      - 80:8000
+    volumes:
+      - ./models:/model/models
+    restart: always
+    deploy:
+      resources:
+        reservations:
+          devices:
+          - driver: nvidia
+            #count: 1
+            device_ids: ['0']
+            capabilities: [gpu]
+    command:
+      - bash
+      - start.sh
+      - --repo=TheBloke/Mistral-7B-Instruct-v0.1-GGUF
+      - --file=mistral-7b-instruct-v0.1.Q4_K_M.gguf
+      - --n_ctx=4096
